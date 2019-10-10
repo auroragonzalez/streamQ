@@ -1,0 +1,17 @@
+{
+    "contents" : "#library(\"tsoutliers\")\n\nstreamQ <- function(datastream) {\n  df <- jsonlite::stream_in(url(datastream))\n  dfjson <- jsonlite::fromJSON(jsonlite::toJSON(df))\n  mydata <- dfjson$nameValuePairs\n  columnnames <-colnames(mydata)\n\n  x<-data.frame(mydata$inDateTime$nameValuePairs)\n\n  tempout_index <- grep(columnnames[grepl('temperature_indoor',columnnames)], colnames(mydata))\n\n\n  xy <- data.frame(x,mydata[tempout_index])\n  xy <-na.omit(xy)\n\n  colnames(xy) <- c(\"time\",\"tempout\")\n  #  xy <- subset(xy, xy$tempout > -30)\n  summary(xy)\n\n  dat.ts<- ts(xy$tempout,frequency=1)\n  data.ts.outliers <- tso(dat.ts, types = c(\"AO\", \"LS\", \"TC\", \"IO\", \"SLS\"))\n  Q = 1 - nrow(data.ts.outliers$outliers)/nrow(xy)\n\n  return(Q)\n}\n",
+    "created" : 1508315187530.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "2|33|25|0|\n",
+    "hash" : "3695751294",
+    "id" : "3A4488CB",
+    "lastKnownWriteTime" : 1508316030,
+    "path" : "~/Git_repos/postgrado/doctorado/streamQ/R/streamQ.R",
+    "project_path" : "R/streamQ.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,17 @@
+{
+    "contents" : "\\name{streamQ}\n\\alias{streamQ}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\n%%  ~~function to do ... ~~\nstreamQ\n}\n\\description{\n%%  ~~ A concise (1-5 lines) description of what the function does. ~~\nThe function receives a numerical data stream and computes its outliers. The Quality of such stream is defined as Q = 1 - percentage of outliers.\n}\n\\usage{\nstreamQ(datastream)\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{datastream}{\n%%     ~~Describe \\code{datastream} here~~\n}\n}\n\\details{\n%%  ~~ If necessary, more details than the description above ~~\n}\n\\value{\n%%  ~Describe the value returned\n%%  If it is a LIST, use\n%%  \\item{comp1 }{Description of 'comp1'}\n%%  \\item{comp2 }{Description of 'comp2'}\n%% ...\n}\n\\references{\n%% ~put references to the literature/web site here ~\n}\n\\author{\n%%  ~~who you are~~\n}\n\\note{\n%%  ~~further notes~~\n}\n\n%% ~Make other sections like Warning with \\section{Warning }{....} ~\n\n\\seealso{\n%% ~~objects to See Also as \\code{\\link{help}}, ~~~\n}\n\\examples{\n##---- Should be DIRECTLY executable !! ----\n##-- ==>  Define data, use random,\n##--\tor do  help(data=index)  for the standard data sets.\n\n## The function is currently defined as\nfunction (datastream)\n{\n    df <- jsonlite::stream_in(url(datastream))\n    dfjson <- jsonlite::fromJSON(jsonlite::toJSON(df))\n    mydata <- dfjson$nameValuePairs\n    columnnames <- colnames(mydata)\n    x <- data.frame(mydata$inDateTime$nameValuePairs)\n    tempout_index <- grep(columnnames[grepl(\"temperature_indoor\",\n        columnnames)], colnames(mydata))\n    xy <- data.frame(x, mydata[tempout_index])\n    xy <- na.omit(xy)\n    colnames(xy) <- c(\"time\", \"tempout\")\n    summary(xy)\n    xy = xy[1:3, ]\n    dat.ts <- ts(xy$tempout, frequency = 1)\n    data.ts.outliers <- tso(dat.ts, types = c(\"AO\", \"LS\", \"TC\",\n        \"IO\", \"SLS\"))\n    Q = 1 - nrow(data.ts.outliers$outliers)/nrow(xy)\n    return(Q)\n  }\n}\n% Add one or more standard keywords, see file 'KEYWORDS' in the\n% R documentation directory.\n\\keyword{ ~kwd1 }% use one of  RShowDoc(\"KEYWORDS\")\n\\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line\n",
+    "created" : 1508318656102.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3385977615",
+    "id" : "4C37A5F8",
+    "lastKnownWriteTime" : 1508315740,
+    "path" : "~/.cache/.fr-ZPU8T1/streamQ/man/streamQ.Rd",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "type" : "r_doc"
+}
